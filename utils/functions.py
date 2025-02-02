@@ -1,3 +1,6 @@
+from io import BytesIO
+from typing import Any
+import matplotlib.pyplot as plt
 from utils.database import insert_into_expences, select_from_expences, delete_from_expences
 
 
@@ -90,8 +93,57 @@ def select_expences(telegram_id: int, category: str = None, amount: float = None
     return response
 
 
+def get_statistics(telegram_id: int, start_datetime: str, end_datetime: str) -> Any:
+
+    filters = {}
+    filters["telegram_id"] = telegram_id
+    filters["created"] = (start_datetime, end_datetime)
+
+    try:
+
+        expences = select_from_expences(filters)
+
+        if expences:
+
+            category_totals = {}
+            
+            for expence in expences:
+
+                category = expence["category"]
+                amount = expence["amount"]
+
+                if category not in category_totals:
+                    
+                    category_totals[category] = 0.0
+                
+                category_totals[category] += amount
+                
+            categories = list(category_totals.keys())
+            amounts = list(category_totals.values())
+            
+            plt.figure(figsize=(8, 8))
+            plt.pie(amounts, labels=categories, autopct='%1.1f%%', startangle=90)
+            plt.title("Розподіл витрат по категоріям")
+            plt.tight_layout()
+            response = BytesIO()
+            plt.savefig(response, format="png")
+            plt.close()
+            response.seek(0)
+        
+        else:
+
+            response = "Виконано!\nАле витрат виходячи з наданих умов не знайдено."
+    
+    except Exception:
+
+        response = "Помилка!\nНа жаль статистику не вдалося вивантажити. Спробуй ще раз."
+    
+    return response
+
+
 functions_register = {
     "insert_expence": insert_expence,
     "delete_expence": delete_expence,
-    "select_expences": select_expences
+    "select_expences": select_expences,
+    "get_statistics": get_statistics
 }
