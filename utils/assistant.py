@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from openai import OpenAI
 from config import OPEN_AI_TOKEN, LLM_ID
 from aiogram.types import Message
@@ -18,7 +18,7 @@ def text_assistant(message: Message) -> str:
 
     telegram_id = message.from_user.id
     text = message.text
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now = (datetime.now() + timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")
     categories = ", ".join([category["category"] for category in select_from_categories()])
 
     if telegram_id not in messages_buffer:
