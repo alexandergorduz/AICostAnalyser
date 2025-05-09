@@ -9,5 +9,3 @@ __pycache__/
 
 # IDE-specific files
 .vscode/
-
-database.db
