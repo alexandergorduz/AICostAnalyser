@@ -12,3 +12,4 @@ OPEN_AI_TOKEN = os.getenv("OPEN_AI_TOKEN")
 
 DATABASE_PATH = "database.db"
 LLM_ID = "gpt-4o"
+AUDIO_LLM = "whisper-1"

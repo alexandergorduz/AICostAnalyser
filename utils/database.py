@@ -17,7 +17,7 @@ def initialize_database() -> None:
             first_name TEXT NOT NULL,
             last_name TEXT NOT NULL,
             username TEXT NOT NULL,
-            created TIMESTAMP DEFAULT (DATETIME('now', '+2 hours')))
+            created TIMESTAMP DEFAULT (DATETIME('now')))
         """
     )
 
@@ -28,7 +28,7 @@ def initialize_database() -> None:
         CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             category TEXT NOT NULL,
-            created TIMESTAMP DEFAULT (DATETIME('now', '+2 hours')))
+            created TIMESTAMP DEFAULT (DATETIME('now')))
         """
     )
 
@@ -41,7 +41,7 @@ def initialize_database() -> None:
             telegram_id INTEGER NOT NULL,
             category TEXT NOT NULL,
             amount REAL NOT NULL,
-            created TIMESTAMP DEFAULT (DATETIME('now', '+2 hours')))
+            created TIMESTAMP DEFAULT (DATETIME('now')))
         """
     )
 
