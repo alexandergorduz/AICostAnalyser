@@ -121,16 +121,46 @@ def get_statistics(telegram_id: int, start_datetime: str, end_datetime: str) -> 
                     category_totals[category] = 0.0
                 
                 category_totals[category] += amount
-                
-            categories = list(category_totals.keys())
-            amounts = list(category_totals.values())
             
-            plt.figure(figsize=(8, 8))
-            plt.pie(amounts, labels=categories, autopct='%1.1f%%', startangle=90)
-            plt.title("Розподіл витрат по категоріям")
-            plt.tight_layout()
+            # Sort categories by amount for better visualization
+            sorted_categories = sorted(category_totals.items(), key=lambda item: item[1], reverse=True)
+            
+            categories = [item[0] for item in sorted_categories]
+            amounts = [item[1] for item in sorted_categories]
+            total_amount = sum(amounts)
+
+            # Use a more visually appealing color palette
+            colors = plt.cm.Pastel2(range(len(categories)))
+
+            plt.figure(figsize=(10, 7)) # Adjusted figure size
+            wedges, texts, autotexts = plt.pie(
+                amounts, 
+                labels=categories, 
+                autopct='%1.1f%%', 
+                startangle=140, # Slightly rotated for better label positioning with many categories
+                colors=colors,
+                wedgeprops=dict(width=0.4, edgecolor='w'), # Donut chart style
+                shadow=True,
+                labeldistance=1.15 # Adjust radial distance of labels
+            )
+
+            # Improve text properties
+            for text in texts:
+                text.set_fontsize(10)
+            for autotext in autotexts:
+                autotext.set_fontsize(9)
+                autotext.set_color('black')
+            
+            plt.title(f"Розподіл витрат по категоріям\nЗагальна сума: {total_amount:_.2f} грн".replace('_', ' '), fontsize=14, pad=20)
+            
+            # Add a legend if there are many categories, or for better clarity
+            if len(categories) > 5:
+                 plt.legend(wedges, categories, title="Категорії", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+
+            plt.axis('equal') # Equal aspect ratio ensures that pie is drawn as a circle.
+            plt.tight_layout(pad=1.5) # Adjusted padding
             response = BytesIO()
-            plt.savefig(response, format="png")
+            plt.savefig(response, format="png", bbox_inches='tight') # Ensure the legend is saved if outside plot
             plt.close()
             response.seek(0)
         
