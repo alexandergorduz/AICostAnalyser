@@ -8,12 +8,9 @@ from aiogram.types import Message
 from aiogram.types import BufferedInputFile
 from utils.assistant import text_assistant, image_assistant, audio_assistant
 
-
-
 router = Router()
 
 client = OpenAI(api_key=OPEN_AI_TOKEN)
-
 
 @router.message(F.text)
 async def message_text_handler(message: Message) -> None:
@@ -22,7 +19,7 @@ async def message_text_handler(message: Message) -> None:
 
     if isinstance(response, str):
 
-        await message.answer(response)
+        await message.answer(response, parse_mode="HTML")
     
     elif isinstance(response, BytesIO):
 
@@ -69,7 +66,7 @@ async def message_image_handler(message: Message) -> None:
 
     if isinstance(response, str):
 
-        await message.answer(response)
+        await message.answer(response, parse_mode="HTML")
     
     elif isinstance(response, BytesIO):
 
@@ -98,7 +95,7 @@ async def handle_audio(message: Message):
 
     if isinstance(response, str):
 
-        await message.answer(response)
+        await message.answer(response, parse_mode="HTML")
     
     elif isinstance(response, BytesIO):
 

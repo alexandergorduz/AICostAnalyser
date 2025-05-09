@@ -1,5 +1,5 @@
 # ignore virtual environment
-venv/
+.venv/
 
 # ignore environment variables file
 .env
@@ -9,3 +9,5 @@ __pycache__/
 
 # IDE-specific files
 .vscode/
+
+database.db

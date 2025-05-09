@@ -16,7 +16,11 @@ def insert_expence(telegram_id: int, category: str, amount: float) -> str:
 
         insert_into_expences(expence)
 
-        response = f"Записано!\nВитрата із категорії '{category}', на суму {float(amount)}грн."
+        formatted_amount = f"{float(amount):_.2f}".replace('_', ' ')
+
+        response = (f"✅ <b>Записано!</b>\n\n"
+                    f"Витрата із категорії '<b>{category}</b>',\n"
+                    f"на суму <b>{int(float(formatted_amount))}</b> грн.")
     
     except Exception:
 

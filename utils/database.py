@@ -2,8 +2,6 @@ import sqlite3
 from config import DATABASE_PATH
 from typing import List, Dict, Tuple, Any
 
-
-
 def initialize_database() -> None:
 
     connection = sqlite3.connect(DATABASE_PATH)
@@ -359,3 +357,52 @@ def delete_from_expences(filters: Dict[str, Any]) -> None:
     connection.commit()
 
     connection.close()
+
+
+def get_expense_count_by_telegram_id(telegram_id: int) -> int:
+
+    connection = sqlite3.connect(DATABASE_PATH)
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            COUNT(*)
+        FROM
+            expences
+        WHERE
+            telegram_id = ?
+        """,
+        (telegram_id,)
+    )
+
+    count = cursor.fetchone()[0]
+
+    connection.close()
+
+    return count
+
+
+def get_expense_sum_by_telegram_id(telegram_id: int) -> float:
+
+    connection = sqlite3.connect(DATABASE_PATH)
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            SUM(amount)
+        FROM
+            expences
+        WHERE
+            telegram_id = ?
+        """,
+        (telegram_id,)
+    )
+
+    total_sum = cursor.fetchone()[0]
+
+    connection.close()
+
+    # Handle case where there are no expenses and SUM(amount) returns None
+    return total_sum if total_sum is not None else 0.0
